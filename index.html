@@ -3,66 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecionamento de Pedido</title>
+    <title>Auto Atendimento - Loja 541</title>
     <style>
-        /* CSS: Estilização do Botão */
+        /* Estilização Geral e Responsiva */
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
             font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #0404bc; /* Seu Azul Royal */
+            color: white;
+            text-align: center;
         }
 
-        .botao-pedido {
-            background-color: #0f5aff;
-            color: white;
+        /* Texto de Instrução acima do botão */
+        #instrucao {
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            max-width: 400px;
+            font-weight: 300;
+            transition: opacity 0.3s;
+        }
+
+        strong { color: #ffffff; font-weight: 700; }
+
+        /* O Botão Principal */
+        .botao-fluxo {
+            background-color: #ffffff;
+            color: #0404bc;
             border: none;
-            padding: 15px 40px;
+            padding: 20px 30px;
             font-size: 18px;
             font-weight: bold;
-            border-radius: 100px; /* Cantos 100% arredondados */
+            border-radius: 100px;
             cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(15, 90, 255, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 350px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .botao-pedido:hover {
-            background-color: #0d4ecc;
-            transform: scale(1.05);
+        .botao-fluxo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+            background-color: #f0f0f0;
         }
 
-        .botao-pedido:active {
-            transform: scale(0.98);
+        .botao-fluxo:active { transform: scale(0.95); }
+
+        /* Rodapé discreto */
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
-    <button class="botao-pedido" onclick="processarPedido()">
-        Fazer Pedido Agora
+    <div id="instrucao">Carregando atendimento...</div>
+
+    <button id="btnPrincipal" class="botao-fluxo" onclick="proximoPasso()">
+        Iniciar
     </button>
 
+    <div class="footer">Loja 541 - Bairro Novo</div>
+
     <script>
-        // JavaScript: Lógica de Copiar e Redirecionar
-        function processarPedido() {
-            const cepDaLoja = "55194-333"; // COLOQUE SEU CEP AQUI
-            const linkWhats = "https://wa.me/551140028282?text=Fazer%20Pedido%20CEP%20" + cepDaLoja;
+        // Configurações dos Passos
+        const etapas = [
+            {
+                textoTopo: "Clique no Botão Abaixo para Falar com Nosso <strong>Auto Atendimento de IA de Compras</strong>",
+                textoBotao: "Fazer Pedido Agora Aqui",
+                link: "https://wa.me/551140028282?text=Olá!+Quero+iniciar+meu+pedido."
+            },
+            {
+                textoTopo: "Toque abaixo para comprar na <strong>Loja 541</strong> da Av. Vr. Rodolfo Francelino Aragão, 88 - Bairro Novo.<br><br>⚠️ <i>Após clicar, volte aqui para concluir.</i>",
+                textoBotao: "Informar nosso CEP pra comprar aqui",
+                link: "https://wa.me/551140028282?text=Meu+CEP+é+01234567" // Ajuste o CEP aqui
+            },
+            {
+                textoTopo: "Excelente! Agora você já pode finalizar seu atendimento personalizado.",
+                textoBotao: "Falar direto com Nossa Loja",
+                link: "https://wa.me/551140028282?text=Quero+finalizar+com+um+atendente"
+            }
+        ];
 
-            // 1. Copia o CEP para a área de transferência do usuário
-            navigator.clipboard.writeText(cepDaLoja).then(() => {
-                // 2. Avisa o usuário (opcional) e redireciona
-                console.log("CEP copiado com sucesso!");
-                window.location.href = linkWhats;
-            }).catch(err => {
-                // Caso o navegador bloqueie a cópia, ele ainda redireciona
-                window.location.href = linkWhats;
-            });
+        // Recuperar progresso do localStorage ou começar do zero
+        let passoAtual = parseInt(localStorage.getItem('passoCliente')) || 0;
+
+        // Função para atualizar a tela
+        function atualizarTela() {
+            const etapa = etapas[passoAtual] || etapas[etapas.length - 1];
+            document.getElementById('instrucao').innerHTML = etapa.textoTopo;
+            document.getElementById('btnPrincipal').innerText = etapa.textoBotao;
         }
-    </script>
 
+        // Função executada no clique
+        function proximoPasso() {
+            const etapa = etapas[passoAtual];
+            
+            // Abre o WhatsApp da etapa atual
+            window.open(etapa.link, '_blank');
+
+            // Avança para o próximo passo (se não for o último)
+            if (passoAtual < etapas.length - 1) {
+                passoAtual++;
+                localStorage.setItem('passoCliente', passoAtual); // Salva o progresso
+                setTimeout(atualizarTela, 1000); // Atualiza o visual após 1 segundo
+            }
+        }
+
+        // Iniciar a tela pela primeira vez
+        atualizarTela();
+    </script>
 </body>
 </html>
