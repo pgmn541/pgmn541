@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecionamento de Pedido</title>
+    <style>
+        /* CSS: Estilização do Botão */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        .botao-pedido {
+            background-color: #0f5aff;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 100px; /* Cantos 100% arredondados */
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(15, 90, 255, 0.3);
+        }
+
+        .botao-pedido:hover {
+            background-color: #0d4ecc;
+            transform: scale(1.05);
+        }
+
+        .botao-pedido:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <button class="botao-pedido" onclick="processarPedido()">
+        Fazer Pedido Agora
+    </button>
+
+    <script>
+        // JavaScript: Lógica de Copiar e Redirecionar
+        function processarPedido() {
+            const cepDaLoja = "55194-333"; // COLOQUE SEU CEP AQUI
+            const linkWhats = "https://wa.me/551140028282?text=Fazer%20Pedido%20CEP%20" + cepDaLoja;
+
+            // 1. Copia o CEP para a área de transferência do usuário
+            navigator.clipboard.writeText(cepDaLoja).then(() => {
+                // 2. Avisa o usuário (opcional) e redireciona
+                console.log("CEP copiado com sucesso!");
+                window.location.href = linkWhats;
+            }).catch(err => {
+                // Caso o navegador bloqueie a cópia, ele ainda redireciona
+                window.location.href = linkWhats;
+            });
+        }
+    </script>
+
+</body>
+</html>
